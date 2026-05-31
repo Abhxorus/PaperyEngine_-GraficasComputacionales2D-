@@ -165,7 +165,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Core\CShape.cpp" />
+    <ClCompile Include="Source\Core\Window.cpp" />
     <ClCompile Include="Source\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Core\CShape.h" />
+    <ClInclude Include="Include\Core\Window.h" />
+    <ClInclude Include="Include\ECS\SparseSet.h" />
+    <ClInclude Include="Include\ECS\Types.h" />
+    <ClInclude Include="Include\Prerequisites.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

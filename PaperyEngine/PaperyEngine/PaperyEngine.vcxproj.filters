@@ -19,10 +19,42 @@
     <Filter Include="Include">
       <UniqueIdentifier>{c435d57f-5f9f-45a9-9c23-51b87dc13b3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Core">
+      <UniqueIdentifier>{66a19785-7c29-46d7-be97-6efb57e00f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\ECS">
+      <UniqueIdentifier>{0dbfaf6d-deb4-4c58-9af9-7e6e20950fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{b604f84a-3343-4466-bed8-634d0ceca77d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\CShape.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Window.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Prerequisites.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\CShape.h">
+      <Filter>Include\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core\Window.h">
+      <Filter>Include\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Types.h">
+      <Filter>Include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\SparseSet.h">
+      <Filter>Include\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
