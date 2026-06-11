@@ -1,45 +1,100 @@
 #pragma once
 #include "Prerequisites.h"
 
-class 
-Window {
+/**
+ * @file Window.h
+ * @brief Definición de la clase Window, un wrapper para la gestión de la ventana de renderizado de SFML.
+ */
+
+ /**
+  * @class Window
+  * @brief Encapsula una ventana de renderizado (sf::RenderWindow) y proporciona métodos para su gestión y actualización de frames.
+  */
+class
+    Window {
 public:
-	Window() = default;
-	Window(int width, int height, const std::string& title);
-	~Window() = default;
+    /**
+     * @brief Constructor por defecto.
+     */
+    Window() = default;
 
-	//void 
-	//handleEvents(EngineGUI& engineGUI);
+    /**
+     * @brief Constructor que inicializa la ventana con dimensiones y título específicos.
+     * @param width Ancho de la ventana en píxeles.
+     * @param height Alto de la ventana en píxeles.
+     * @param title Título que se mostrará en la barra de la ventana.
+     */
+    Window(int width, int height, const std::string& title);
 
-	bool 
-	isOpen() const;
+    /**
+     * @brief Destructor por defecto.
+     */
+    ~Window() = default;
 
-	void 
-	clear(const sf::Color& color = sf::Color(0, 0, 0, 255));
+    //void 
+    //handleEvents(EngineGUI& engineGUI);
 
-	void 
-	draw(const sf::Drawable & drawable, 
-			 const sf::RenderStates& states = sf::RenderStates::Default);
+    /**
+     * @brief Verifica si la ventana sigue abierta.
+     * @return true si la ventana está abierta, false en caso contrario.
+     */
+    bool
+        isOpen() const;
 
-	void 
-	display();
+    /**
+     * @brief Limpia el contenido de la ventana con un color específico.
+     * @param color Color de fondo con el que se limpiará la ventana (negro por defecto).
+     */
+    void
+        clear(const sf::Color& color = sf::Color(0, 0, 0, 255));
 
-	void
-	close();
+    /**
+     * @brief Dibuja un objeto de SFML en la ventana.
+     * @param drawable Objeto a dibujar (sf::Sprite, sf::Shape, etc.).
+     * @param states Estados de renderizado a aplicar (transformaciones, shaders, etc.). Por defecto usa los estados base.
+     */
+    void
+        draw(const sf::Drawable& drawable,
+            const sf::RenderStates& states = sf::RenderStates::Default);
 
-	void
-	update();
+    /**
+     * @brief Muestra en pantalla todo lo que ha sido dibujado en el buffer oculto durante el frame actual.
+     */
+    void
+        display();
 
-	void
-	render();
+    /**
+     * @brief Cierra la ventana actual y detiene el procesamiento de eventos.
+     */
+    void
+        close();
 
-	void
-	destroy();
+    /**
+     * @brief Actualiza la lógica interna de la ventana (como el cálculo del deltaTime).
+     */
+    void
+        update();
+
+    /**
+     * @brief Maneja el proceso de renderizado base de la ventana.
+     */
+    void
+        render();
+
+    /**
+     * @brief Destruye explícitamente los recursos asociados a la ventana.
+     */
+    void
+        destroy();
 
 public:
-	std::unique_ptr<sf::RenderWindow> m_window = nullptr;
+    /** @brief Puntero único a la ventana de renderizado subyacente de SFML. */
+    std::unique_ptr<sf::RenderWindow> m_window = nullptr;
 private:
-	sf::View m_view;
-	sf::Time deltaTime;
-	sf::Clock clock;
+    /** @brief Vista o cámara actual aplicada a la ventana. */
+    sf::View m_view;
+    /** @brief Tiempo transcurrido entre el frame anterior y el actual. */
+    sf::Time deltaTime;
+    /** @brief Reloj utilizado para calcular el tiempo entre frames (delta time). */
+    sf::Clock clock;
 };

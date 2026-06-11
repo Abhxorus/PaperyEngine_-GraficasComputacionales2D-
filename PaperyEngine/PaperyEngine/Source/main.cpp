@@ -2,14 +2,33 @@
 #include "Core/Window.h"
 #include "Core/CShape.h"
 
+/**
+ * @file main.cpp
+ * @brief Punto de entrada principal de la aplicación y ciclo de ejecución del motor.
+ */
+
+ /** @brief Instancia global de la ventana de la aplicación. */
 Window g_window(Window(800, 600, "Papery Engine"));
+
+/** @brief Instancia de prueba para una figura geométrica de tipo círculo. */
 CShape Circle(ShapeType::CIRCLE);
+
+/** @brief Instancia de prueba para una figura geométrica de tipo línea. */
 CShape line(ShapeType::LINE);
 
+/**
+ * @brief Libera los recursos globales o realiza tareas de limpieza antes de cerrar la aplicación.
+ */
 void destroy() {
 	//SAFE_PTR_RELEASE(g_window);
 }
 
+/**
+ * @brief Función principal del programa.
+ * @details Inicializa la ventana y los objetos, y mantiene activo el bucle principal (Game Loop)
+ * donde se procesan eventos, se actualiza la lógica y se renderizan los gráficos en pantalla.
+ * @return Código de salida del programa (0 indica ejecución exitosa).
+ */
 int
 main() {
 	// create the window

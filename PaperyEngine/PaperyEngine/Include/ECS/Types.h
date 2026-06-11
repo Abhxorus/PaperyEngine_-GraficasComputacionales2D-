@@ -1,25 +1,40 @@
 #pragma once
 #include "Prerequisites.h"
-// ============================================================
-//  ECS :: Types.h
-//  Tipos fundamentales del Entity Component System.
-//
-//  EntityID  = uint64_t que empaqueta:
-//              bits [0..31]  → EntityIndex  (posición en el array)
-//              bits [32..63] → EntityVersion (generación; invalida IDs viejos)
-//
-//  Al destruir una entidad su version sube 1, así cualquier
-//  EntityID antiguo guardado en otro sitio queda inválido.
-// ============================================================
+
+/**
+ * @file Types.h
+ * @brief Tipos fundamentales y utilidades para el Entity Component System (ECS).
+ */
+
+ // ============================================================
+ //  ECS :: Types.h
+ //  Tipos fundamentales del Entity Component System.
+ //
+ //  EntityID  = uint64_t que empaqueta:
+ //              bits [0..31]  → EntityIndex  (posición en el array)
+ //              bits [32..63] → EntityVersion (generación; invalida IDs viejos)
+ //
+ //  Al destruir una entidad su version sube 1, así cualquier
+ //  EntityID antiguo guardado en otro sitio queda inválido.
+ // ============================================================
 
 namespace ECS {
 	// ── Tipos primitivos ──────────────────────────────────────
+
+	/** @brief Índice de la entidad en el array de almacenamiento. */
 	using EntityIndex = uint32_t;  // Índice de la entidad en el array
+
+	/** @brief Versión de la entidad para invalidar IDs antiguos y evitar referencias inválidas. */
 	using EntityVersion = uint32_t; // Versión de la entidad (para invalidar IDs antiguos)
+
+	/** @brief Identificador completo que empaqueta el índice (bits 0-31) y la versión (bits 32-63). */
 	using EntityID = uint64_t;      // ID completo que empaqueta índice y versión
+
+	/** @brief Identificador numérico único asignado a cada tipo de componente en tiempo de ejecución. */
 	using ComponentTypeID = uint32_t; // ID de tipo para componentes
 
 	// Valor centinela para "ninguna entidad"
+	/** @brief Valor centinela que representa la ausencia de una entidad (entidad nula o inválida). */
 	inline constexpr EntityID NULL_ENTITY = std::numeric_limits<EntityID>::max();
 
 	// ── Empaquetado / desempaquetado de EntityID ─────────────

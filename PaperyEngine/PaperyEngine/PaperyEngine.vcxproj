@@ -172,8 +172,12 @@
   <ItemGroup>
     <ClInclude Include="Include\Core\CShape.h" />
     <ClInclude Include="Include\Core\Window.h" />
+    <ClInclude Include="Include\ECS\ComponentPool.h" />
+    <ClInclude Include="Include\ECS\Registry.h" />
     <ClInclude Include="Include\ECS\SparseSet.h" />
+    <ClInclude Include="Include\ECS\System.h" />
     <ClInclude Include="Include\ECS\Types.h" />
+    <ClInclude Include="Include\ECS\View.h" />
     <ClInclude Include="Include\Prerequisites.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
