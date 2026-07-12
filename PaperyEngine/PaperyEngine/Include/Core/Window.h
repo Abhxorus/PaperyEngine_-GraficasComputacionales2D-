@@ -72,6 +72,13 @@ public:
     /**
      * @brief Actualiza la lógica interna de la ventana (como el cálculo del deltaTime).
      */
+
+    void
+        handleResize(const sf::Vector2u& size);
+
+    void
+        applyCameraView(const sf::Vector2f& center, float zoom, float rotationDeg);
+
     void
         update();
 
@@ -94,6 +101,7 @@ private:
     /** @brief Vista o cámara actual aplicada a la ventana. */
     sf::View m_view;
     /** @brief Tiempo transcurrido entre el frame anterior y el actual. */
+    sf::Vector2f m_baseViewSize{};
     sf::Time deltaTime;
     /** @brief Reloj utilizado para calcular el tiempo entre frames (delta time). */
     sf::Clock clock;

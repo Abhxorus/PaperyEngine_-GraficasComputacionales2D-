@@ -1,6 +1,10 @@
 #include "Prerequisites.h"
 #include "Core/Window.h"
 #include "Core/CShape.h"
+#include "ECS/Registry.h"
+#include "ECS/Components/Transform.h"
+#include "ECS/Components/Render.h"
+#include "ECS/Systems/RenderSystem.h"
 
 /**
  * @file main.cpp

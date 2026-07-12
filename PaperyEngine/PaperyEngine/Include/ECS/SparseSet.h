@@ -19,7 +19,7 @@ namespace ECS {
 		/**
 		 * @brief Constructor por defecto de la clase SparseSet.
 		 */
-		SparseSet();
+		SparseSet() = default;
 
 		/**
 		 * @brief Destructor virtual por defecto.
