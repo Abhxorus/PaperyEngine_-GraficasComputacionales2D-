@@ -1,18 +1,5 @@
-#include "Core/Window.h"
+Ôªø#include "Core/Window.h"
 
-/**
- * @file Window.cpp
- * @brief ImplementaciÛn de los mÈtodos de la clase Window.
- */
-
- /**
-  * @brief Constructor que inicializa la ventana de renderizado de SFML.
-  * @details Crea la instancia de sf::RenderWindow con las dimensiones y el tÌtulo especificados.
-  * Establece un lÌmite de 60 fotogramas por segundo y registra el estado de la creaciÛn mediante macros.
-  * @param width Ancho de la ventana en pÌxeles.
-  * @param height Alto de la ventana en pÌxeles.
-  * @param title TÌtulo que aparecer· en la barra de la ventana.
-  */
 Window::Window(int width, int height, const std::string& title) {
 
 	m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode({ static_cast<unsigned int>(width),
@@ -21,6 +8,9 @@ Window::Window(int width, int height, const std::string& title) {
 		sf::Style::Default);
 	if (m_window) {
 		m_window->setFramerateLimit(60);
+		// Vista inicial: origen en el centro y tama√±o base = tama√±o ventana.
+		// (tambi√©n inicializa m_baseViewSize para el zoom de la c√°mara)
+		handleResize(m_window->getSize());
 		MESSAGE("Window", "Window", "Window created successfully");
 
 	}
@@ -30,10 +20,7 @@ Window::Window(int width, int height, const std::string& title) {
 	}
 }
 
-/**
- * @brief Verifica de forma segura si la ventana est· inicializada y abierta.
- * @return true si el puntero es v·lido y la ventana est· abierta, false en caso contrario (registra error).
- */
+
 bool
 Window::isOpen() const {
 	// Check that window is not null
@@ -46,10 +33,6 @@ Window::isOpen() const {
 	}
 }
 
-/**
- * @brief Limpia el b˙fer de la ventana con el color especificado.
- * @param color Color de limpieza (negro por defecto seg˙n la cabecera).
- */
 void
 Window::clear(const sf::Color& color) {
 	if (m_window) {
@@ -60,11 +43,6 @@ Window::clear(const sf::Color& color) {
 	}
 }
 
-/**
- * @brief Dibuja un objeto renderizable en el b˙fer oculto de la ventana.
- * @param drawable Objeto a dibujar (debe heredar de sf::Drawable).
- * @param states Estados adicionales de renderizado (sf::RenderStates).
- */
 void
 Window::draw(const sf::Drawable& drawable, const sf::RenderStates& states) {
 	if (m_window) {
@@ -75,9 +53,6 @@ Window::draw(const sf::Drawable& drawable, const sf::RenderStates& states) {
 	}
 }
 
-/**
- * @brief Intercambia los b˙feres y muestra lo dibujado en el fotograma actual.
- */
 void
 Window::display() {
 	if (m_window) {
@@ -88,9 +63,6 @@ Window::display() {
 	}
 }
 
-/**
- * @brief Cierra la ventana y detiene la recepciÛn de eventos.
- */
 void
 Window::close()
 {
@@ -102,25 +74,48 @@ Window::close()
 	}
 }
 
-/**
- * @brief Actualiza la lÛgica de tiempo de la ventana calculando el deltaTime del fotograma.
- */
+void
+Window::handleResize(const sf::Vector2u& size) {
+	if (!m_window) {
+		ERROR("Window", "handleResize", "Window is null");
+		return;
+	}
+	// Vista 1:1 con el tama√±o de la ventana ‚Üí sin estiramiento.
+	// Centro de la vista en (0,0) ‚Üí el origen del mundo queda en
+	// el CENTRO de la pantalla. √Årea visible: (-w/2,-h/2)..(w/2,h/2).
+	const sf::Vector2f fSize(static_cast<float>(size.x),
+		static_cast<float>(size.y));
+	m_baseViewSize = fSize;            // tama√±o base (sin zoom) para la c√°mara
+	m_view.setSize(fSize);
+	m_view.setCenter({ 0.f, 0.f });
+	m_window->setView(m_view);
+}
+
+void
+Window::applyCameraView(const sf::Vector2f& center, float zoom, float rotationDeg) {
+	if (!m_window) {
+		ERROR("Window", "applyCameraView", "Window is null");
+		return;
+	}
+	if (zoom <= 0.f) zoom = 1.f;       // evita divisi√≥n por cero / vista invertida
+
+	// Tama√±o visible = tama√±o base / zoom (m√°s zoom ‚Üí menos mundo visible).
+	m_view.setSize(m_baseViewSize / zoom);
+	m_view.setCenter(center);
+	m_view.setRotation(sf::degrees(rotationDeg));   // rota toda la vista
+	m_window->setView(m_view);
+}
+
 void
 Window::update() {
 	// Almacena el deltaTime una sola vez
 	deltaTime = clock.restart();
 }
 
-/**
- * @brief MÈtodo base para manejar la lÛgica de renderizado interno de la ventana si es necesario.
- */
 void
 Window::render() {
 }
 
-/**
- * @brief Destruye explÌcitamente el objeto sf::RenderWindow subyacente liberando la memoria del puntero ˙nico.
- */
 void
 Window::destroy() {
 	m_window.reset();

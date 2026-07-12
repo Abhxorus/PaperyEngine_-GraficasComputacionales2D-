@@ -66,6 +66,9 @@
     <ClCompile Include="..\ThirdParties\imgui-docking\imgui_widgets.cpp">
       <Filter>Source\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\ThirdParties\imgui-sfml-3.0\imgui-SFML.cpp">
+      <Filter>Source\Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Prerequisites.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="Include\ECS\Components\Render.h">
       <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Systems\UISystem.h">
+      <Filter>Include\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

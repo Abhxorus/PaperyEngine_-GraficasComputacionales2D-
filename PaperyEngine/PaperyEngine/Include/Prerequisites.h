@@ -25,6 +25,8 @@
 
 // Third Parties
 #include <SFML/Graphics.hpp>
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 /**
  * @brief Macro para la liberación segura de memoria de punteros.
@@ -45,7 +47,7 @@
 {                                                             \
     std::ostringstream os_;                                   \
     os_ << classObj << "::" << method << " : "                \
-        << "[CREATION OF RESOURCE" << ": " << state << "] \n";\
+        << "[CREATION OF RESOURCE" << ": " << state "] \n";\
     std::cerr << os_.str();                                   \
 }
 
@@ -61,7 +63,7 @@
 {                                                                 \
     std::ostringstream os_;                                       \
     os_ << "ERROR : " << classObj << "::" << method << " : "      \
-        << "  Error in data from params [" << errorMSG << "] \n"; \
+        << "  Error in data from params [" << errorMSG"] \n"; \
     std::cerr << os_.str();                                       \
     exit(1);                                                      \
 }
