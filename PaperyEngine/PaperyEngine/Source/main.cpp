@@ -8,6 +8,7 @@
 #include "ECS/Systems/RenderSystem.h"
 #include "ECS/Systems/CameraSystem.h"
 #include "ECS/Systems/UISystem.h"
+#include "ECS/Systems/SteeringSystem.h"
 
 /**
  * @file main.cpp
@@ -49,6 +50,7 @@ int main()
     registry.AddSystem<ECS::CameraSystem>(g_window);
     registry.AddSystem<ECS::RenderSystem>(g_window);
     registry.AddSystem<ECS::UISystem>();
+    registry.AddSystem<ECS::SteeringSystem>();
 
     sf::Clock deltaClock;
 
@@ -66,6 +68,29 @@ int main()
     camComp.followTarget = circle;     // la cámara sigue al player
     camComp.followSpeed = 5.f;        // sube para que se pegue más rápido
     camComp.zoom = 1;
+
+    ECS::EntityID pursuer = registry.CreateEntity();
+    registry.AddComponent<ECS::Transform>(pursuer, sf::Vector2f{ 100.f, 100.f });
+    registry.AddComponent<ECS::Render>(pursuer, ECS::Render::Make(TRIANGLE, sf::Color::Red));
+    registry.AddComponent<ECS::SteeringAgent>(pursuer);
+    registry.AddComponent<ECS::SteeringBehavior>(pursuer);
+
+    ECS::EntityID wanderer = registry.CreateEntity();
+    registry.AddComponent<ECS::Transform>(wanderer, sf::Vector2f{ 400.f, 300.f });
+    registry.AddComponent<ECS::Render>(wanderer, ECS::Render::Make(CIRCLE, sf::Color::Green));
+    registry.AddComponent<ECS::SteeringAgent>(wanderer);
+
+    auto& wanderBehavior = registry.AddComponent<ECS::SteeringBehavior>(wanderer);
+    wanderBehavior.wanderEnabled = true;
+
+    auto& pursuerBehavior = registry.GetComponent<ECS::SteeringBehavior>(pursuer);
+    pursuerBehavior.pursuitEnabled = true;
+    pursuerBehavior.pursuitTarget = wanderer;;
+
+    ECS::EntityID rock = registry.CreateEntity();
+    registry.AddComponent<ECS::Transform>(rock, sf::Vector2f{ 300.f, 200.f });
+    registry.AddComponent<ECS::Render>(rock, ECS::Render::Make(RECTANGLE, sf::Color::Yellow));
+    registry.AddComponent<ECS::Obstacle>(rock);
 
     while (g_window.isOpen()) {
         while (const std::optional event =

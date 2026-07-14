@@ -5,6 +5,9 @@
 #include "ECS/Components/Transform.h"
 #include "ECS/Components/Render.h"
 #include "ECS/Components/Camera.h"
+#include "ECS/Components/SteeringAgent.h"
+#include "ECS/Components/SteeringBehavior.h"
+#include "ECS/Components/Obstacle.h"
 
 // ============================================================
 //  ECS :: Systems/UISystem.h
@@ -119,6 +122,46 @@ namespace ECS {
                             else
                                 ImGui::Text("Follow Target: %llu",
                                     static_cast<unsigned long long>(cam->followTarget));
+                        }
+                    }
+                    if (auto* agent = registry.TryGetComponent<ECS::SteeringAgent>(selectedEntity)) {
+                        if (ImGui::CollapsingHeader("Steering Agent", ImGuiTreeNodeFlags_DefaultOpen)) {
+                            ImGui::DragFloat("Max Speed", &agent->maxSpeed, 1.f, 10.f, 1000.f);
+                            ImGui::DragFloat("Max Force", &agent->maxForce, 1.f, 1.f, 500.f);
+                            ImGui::DragFloat("Mass", &agent->mass, 0.1f, 0.1f, 100.f);
+                            vec2Control("Velocity", &agent->velocity.x, 0.f, 120.0f);
+                        }
+                    }
+
+                    if (auto* behavior = registry.TryGetComponent<ECS::SteeringBehavior>(selectedEntity)) {
+                        if (ImGui::CollapsingHeader("Steering Behaviors", ImGuiTreeNodeFlags_DefaultOpen)) {
+                            vec2Control("Target", &behavior->target.x, 0.f, 120.0f);
+
+                            ImGui::SeparatorText("Active Behaviors");
+                            ImGui::Checkbox("Seek", &behavior->seekEnabled);
+                            ImGui::Checkbox("Flee", &behavior->fleeEnabled);
+                            ImGui::Checkbox("Arrive", &behavior->arriveEnabled);
+                            ImGui::Checkbox("Wander", &behavior->wanderEnabled);
+                            ImGui::Checkbox("Pursuit", &behavior->pursuitEnabled);
+                            ImGui::Checkbox("Avoid Obstacles", &behavior->avoidanceEnabled);
+
+                            ImGui::SeparatorText("Parameters");
+                            if (behavior->arriveEnabled) ImGui::DragFloat("Slowing Radius", &behavior->slowingRadius, 1.f, 10.f, 500.f);
+                            if (behavior->wanderEnabled) {
+                                ImGui::DragFloat("Wander Radius", &behavior->wanderRadius, 1.f, 10.f, 200.f);
+                                ImGui::DragFloat("Wander Dist", &behavior->wanderDistance, 1.f, 10.f, 300.f);
+                                ImGui::DragFloat("Wander Jitter", &behavior->wanderJitter, 0.1f, 0.1f, 50.f);
+                            }
+                            if (behavior->avoidanceEnabled) ImGui::DragFloat("Feeler Length", &behavior->avoidanceFeelerLength, 1.f, 10.f, 500.f);
+                            if (behavior->pursuitEnabled) {
+                                ImGui::Text("Pursuit Target: %llu", static_cast<unsigned long long>(behavior->pursuitTarget));
+                            }
+                        }
+                    }
+
+                    if (auto* obs = registry.TryGetComponent<ECS::Obstacle>(selectedEntity)) {
+                        if (ImGui::CollapsingHeader("Obstacle (Avoidance)", ImGuiTreeNodeFlags_DefaultOpen)) {
+                            ImGui::DragFloat("Radius", &obs->radius, 1.f, 1.f, 200.f);
                         }
                     }
                 }

@@ -116,5 +116,17 @@
     <ClInclude Include="Include\ECS\Systems\UISystem.h">
       <Filter>Include\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\Components\SteeringAgent.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Components\SteeringBehavior.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Components\Obstacle.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Systems\SteeringSystem.h">
+      <Filter>Include\ECS\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
