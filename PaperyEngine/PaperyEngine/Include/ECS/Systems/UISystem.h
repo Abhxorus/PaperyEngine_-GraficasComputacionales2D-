@@ -8,6 +8,7 @@
 #include "ECS/Components/SteeringAgent.h"
 #include "ECS/Components/SteeringBehavior.h"
 #include "ECS/Components/Obstacle.h"
+#include "ECS/Components/WaypointPath.h"
 
 // ============================================================
 //  ECS :: Systems/UISystem.h
@@ -162,6 +163,36 @@ namespace ECS {
                     if (auto* obs = registry.TryGetComponent<ECS::Obstacle>(selectedEntity)) {
                         if (ImGui::CollapsingHeader("Obstacle (Avoidance)", ImGuiTreeNodeFlags_DefaultOpen)) {
                             ImGui::DragFloat("Radius", &obs->radius, 1.f, 1.f, 200.f);
+                        }
+                    }
+                    if (auto* path = registry.TryGetComponent<ECS::WaypointPath>(selectedEntity)) {
+                        if (ImGui::CollapsingHeader("Waypoint Path", ImGuiTreeNodeFlags_DefaultOpen)) {
+                            ImGui::Checkbox("Loop Circuit", &path->isLoop);
+                            ImGui::DragFloat("Reach Radius", &path->reachRadius, 1.f, 5.f, 200.f);
+
+                            ImGui::SeparatorText("Ruta (Nodos)");
+                            for (size_t i = 0; i < path->points.size(); ++i) {
+                                ImGui::PushID(static_cast<int>(i));
+
+                                // Usamos tu vec2Control para mantener el mismo estilo visual
+                                vec2Control("Nodo " + std::to_string(i), &path->points[i].x, 0.f, 80.f);
+
+                                // Botón para eliminar un nodo específico
+                                if (ImGui::Button("Eliminar Nodo")) {
+                                    path->points.erase(path->points.begin() + i);
+                                    ImGui::PopID();
+                                    break; // Rompemos el ciclo para evitar errores de iteración al modificar el vector
+                                }
+                                ImGui::Separator();
+                                ImGui::PopID();
+                            }
+
+                            if (ImGui::Button("Añadir Nodo", ImVec2(-1, 30))) {
+                                // Añade un nuevo nodo un poco desplazado del último para que sea visible
+                                sf::Vector2f newPoint = path->points.empty() ?
+                                    sf::Vector2f(0.f, 0.f) : path->points.back() + sf::Vector2f(50.f, 0.f);
+                                path->points.push_back(newPoint);
+                            }
                         }
                     }
                 }

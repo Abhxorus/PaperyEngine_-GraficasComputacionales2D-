@@ -128,5 +128,26 @@
     <ClInclude Include="Include\ECS\Systems\SteeringSystem.h">
       <Filter>Include\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\Components\PlayerController.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Systems\PlayerInputSystem.h">
+      <Filter>Include\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Components\WaypointPath.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Systems\WaypointSystem.h">
+      <Filter>Include\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Systems\RaceSystem.h">
+      <Filter>Include\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Components\Checkpoint.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Components\RaceStats.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
