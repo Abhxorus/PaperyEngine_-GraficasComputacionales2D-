@@ -149,5 +149,8 @@
     <ClInclude Include="Include\ECS\Components\RaceStats.h">
       <Filter>Include\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\Components\PathFollower.h">
+      <Filter>Include\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

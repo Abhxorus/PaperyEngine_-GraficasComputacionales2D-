@@ -9,6 +9,7 @@
 #include "ECS/Components/SteeringBehavior.h"
 #include "ECS/Components/Obstacle.h"
 #include "ECS/Components/WaypointPath.h"
+#include "ECS/Components/Checkpoint.h"
 
 // ============================================================
 //  ECS :: Systems/UISystem.h
@@ -193,6 +194,13 @@ namespace ECS {
                                     sf::Vector2f(0.f, 0.f) : path->points.back() + sf::Vector2f(50.f, 0.f);
                                 path->points.push_back(newPoint);
                             }
+                        }
+                    }
+                    if (auto* cp = registry.TryGetComponent<ECS::Checkpoint>(selectedEntity)) {
+                        if (ImGui::CollapsingHeader("Checkpoint", ImGuiTreeNodeFlags_DefaultOpen)) {
+                            ImGui::DragInt("Orden (Index)", &cp->index, 1, 0, 100);
+                            ImGui::DragFloat("Radio", &cp->radius, 1.f, 10.f, 1000.f);
+                            ImGui::Checkbox("Es Linea de Meta", &cp->isFinishLine);
                         }
                     }
                 }
