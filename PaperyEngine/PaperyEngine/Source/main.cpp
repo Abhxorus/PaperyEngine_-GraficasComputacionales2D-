@@ -106,7 +106,7 @@ int main()
     // --- 2. IA: ENEMIGO 1 ---
     ECS::EntityID enemigo1 = registry.CreateEntity();
     registry.AddComponent<ECS::Transform>(enemigo1, sf::Vector2f{ 100.f, 150.f });
-    registry.AddComponent<ECS::Render>(enemigo1, ECS::Render::Make(TRIANGLE, sf::Color::Red));
+    registry.AddComponent<ECS::Render>(enemigo1, ECS::Render::Make(RECTANGLE, sf::Color::White, "Yoshi.png"));
     registry.AddComponent<ECS::RaceStats>(enemigo1); // Necesario para competir
 
     auto& ag1 = registry.AddComponent<ECS::SteeringAgent>(enemigo1);
@@ -124,7 +124,7 @@ int main()
     // --- 3. IA: ENEMIGO 2 ---
     ECS::EntityID enemigo2 = registry.CreateEntity();
     registry.AddComponent<ECS::Transform>(enemigo2, sf::Vector2f{ 100.f, 250.f });
-    registry.AddComponent<ECS::Render>(enemigo2, ECS::Render::Make(TRIANGLE, sf::Color::Magenta));
+    registry.AddComponent<ECS::Render>(enemigo2, ECS::Render::Make(RECTANGLE, sf::Color::White, "DonkeyKong.png"));
     registry.AddComponent<ECS::RaceStats>(enemigo2); // Necesario para competir
 
     auto& ag2 = registry.AddComponent<ECS::SteeringAgent>(enemigo2);
