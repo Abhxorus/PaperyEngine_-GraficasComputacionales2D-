@@ -97,15 +97,45 @@ namespace ECS {
 
                     // Físicas básicas (Euler)
                     steeringForce = VectorTruncate(steeringForce, agent.maxForce);
+
+                    // --- NUEVO: Frenado dinámico en curvas ---
+                    // Solo calculamos si el kart ya se está moviendo y hay una fuerza activa
+                    if (VectorLength(agent.velocity) > 0.1f && VectorLength(steeringForce) > 0.1f) {
+                        sf::Vector2f velDir = VectorNormalize(agent.velocity);
+                        sf::Vector2f forceDir = VectorNormalize(steeringForce);
+
+                        // Producto punto: 1.0 = línea recta, 0.0 = 90 grados, -1.0 = dar la vuelta
+                        float dot = (velDir.x * forceDir.x) + (velDir.y * forceDir.y);
+
+                        // Si está girando más de ~25 grados (dot menor a 0.9)
+                        if (dot < 0.9f) {
+                            float currentSpeed = VectorLength(agent.velocity);
+
+                            // Mientras más cerrada sea la curva (menor dot), más fuerte es el freno
+                            float brakeFactor = (1.0f - dot) * 2.0f;
+                            currentSpeed -= currentSpeed * brakeFactor * deltaTime;
+
+                            // Establecer un límite mínimo de velocidad (ej. 35% de su velocidad máxima) 
+                            // para que no se detenga por completo en curvas muy cerradas
+                            if (currentSpeed < agent.maxSpeed * 0.35f) {
+                                currentSpeed = agent.maxSpeed * 0.35f;
+                            }
+
+                            // Aplicamos la nueva velocidad reducida
+                            agent.velocity = velDir * currentSpeed;
+                        }
+                    }
+                    // ------------------------------------------
+
                     agent.acceleration = steeringForce / agent.mass;
 
                     agent.velocity += agent.acceleration * deltaTime;
                     agent.velocity = VectorTruncate(agent.velocity, agent.maxSpeed);
                     t.position += agent.velocity * deltaTime;
 
-                    // Rotación orientada a la velocidad
+                    // Rotación orientada a la velocidad (compensando el sprite que mira hacia arriba)
                     if (VectorLength(agent.velocity) > 0.1f) {
-                        t.rotation = std::atan2(agent.velocity.y, agent.velocity.x) * 180.f / 3.14159265f;
+                        t.rotation = (std::atan2(agent.velocity.y, agent.velocity.x) * 180.f / 3.14159265f) + 90.f;
                     }
 
                     agent.acceleration = { 0.f, 0.f };
@@ -229,16 +259,20 @@ namespace ECS {
                     sf::Vector2f toObstacle = obsTransform.position - pos;
                     float dist = VectorLength(toObstacle);
 
-                    // Si está dentro de la longitud de visión (feeler)
+                    // Evaluamos si está dentro del sensor visual O si ya están chocando físicamente
                     if (dist > 0.f && dist < dynamicFeeler + obstacle.radius) {
                         sf::Vector2f agentDir = VectorNormalize(agent.velocity);
-
-                        // Validar si el obstáculo está "al frente" del agente
                         float dotProd = (agentDir.x * toObstacle.x) + (agentDir.y * toObstacle.y);
-                        if (dotProd > 0.f) {
-                            // Fuerza de repulsión lateral
+
+                        // Repeler si está al frente O si la distancia es crítica (Separación forzada para evitar sobreposición)
+                        if (dotProd > 0.f || dist < obstacle.radius * 1.5f) {
                             sf::Vector2f repel = pos - obsTransform.position;
-                            avoidanceForce += VectorNormalize(repel) * agent.maxSpeed * (1.f - (dist / dynamicFeeler));
+                            float distanceFactor = 1.f - (dist / (dynamicFeeler + obstacle.radius));
+
+                            // Multiplicador de pánico: empuja 4 veces más fuerte si están uno encima del otro
+                            float panicMultiplier = (dist < obstacle.radius) ? 4.f : 1.f;
+
+                            avoidanceForce += VectorNormalize(repel) * agent.maxSpeed * distanceFactor * panicMultiplier;
                         }
                     }
                 });

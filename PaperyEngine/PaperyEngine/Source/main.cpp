@@ -40,6 +40,20 @@ void destroy()
     ImGui::SFML::Shutdown();
 }
 
+void ConfigurarKart(ECS::Registry& reg, ECS::EntityID entidad, const std::string& rutaTextura) {
+    auto& render = reg.AddComponent<ECS::Render>(entidad, ECS::Render::Make(RECTANGLE, sf::Color::White, rutaTextura));
+
+    // Si la textura cargó correctamente, forzamos al Rectángulo a adoptar ese tamaño
+    if (render.texture) {
+        sf::Vector2f tamanoReal(static_cast<float>(render.texture->getSize().x), static_cast<float>(render.texture->getSize().y));
+        auto rectangulo = std::dynamic_pointer_cast<sf::RectangleShape>(render.shape);
+        if (rectangulo) {
+            rectangulo->setSize(tamanoReal);
+            rectangulo->setOrigin(tamanoReal / 2.f);
+        }
+    }
+}
+
 /**
  * @brief Función principal del programa.
  */
@@ -72,10 +86,13 @@ int main()
     // --- JUGADOR (Kart) ---
     ECS::EntityID circle = registry.CreateEntity();
     registry.AddComponent<ECS::Transform>(circle, sf::Vector2f{ 300.f, 300.f });
-    registry.AddComponent<ECS::Render>(circle, ECS::Render::Make(RECTANGLE, sf::Color::White, "Bowser.png"));
+    // Usamos la función auxiliar aquí:
+    ConfigurarKart(registry, circle, "Bowser.png");
     registry.AddComponent<ECS::SteeringAgent>(circle);
     registry.AddComponent<ECS::PlayerController>(circle);
-    registry.AddComponent<ECS::RaceStats>(circle); // Necesario para competir
+    registry.AddComponent<ECS::RaceStats>(circle);
+    // Añadimos Obstacle al jugador para que la IA no se le suba encima
+    registry.AddComponent<ECS::Obstacle>(circle, ECS::Obstacle{ 30.f });
 
     // --- CÁMARA ---
     ECS::EntityID cam = registry.CreateEntity();
@@ -106,11 +123,13 @@ int main()
     // --- 2. IA: ENEMIGO 1 ---
     ECS::EntityID enemigo1 = registry.CreateEntity();
     registry.AddComponent<ECS::Transform>(enemigo1, sf::Vector2f{ 100.f, 150.f });
-    registry.AddComponent<ECS::Render>(enemigo1, ECS::Render::Make(RECTANGLE, sf::Color::White, "Yoshi.png"));
-    registry.AddComponent<ECS::RaceStats>(enemigo1); // Necesario para competir
+    // Usamos la función auxiliar aquí:
+    ConfigurarKart(registry, enemigo1, "Yoshi.png");
+    registry.AddComponent<ECS::RaceStats>(enemigo1);
 
     auto& ag1 = registry.AddComponent<ECS::SteeringAgent>(enemigo1);
     ag1.maxSpeed = 120.f;
+    ag1.maxForce = 350.f;
 
     auto& beh1 = registry.AddComponent<ECS::SteeringBehavior>(enemigo1);
     beh1.avoidanceEnabled = true;
@@ -124,11 +143,13 @@ int main()
     // --- 3. IA: ENEMIGO 2 ---
     ECS::EntityID enemigo2 = registry.CreateEntity();
     registry.AddComponent<ECS::Transform>(enemigo2, sf::Vector2f{ 100.f, 250.f });
-    registry.AddComponent<ECS::Render>(enemigo2, ECS::Render::Make(RECTANGLE, sf::Color::White, "DonkeyKong.png"));
-    registry.AddComponent<ECS::RaceStats>(enemigo2); // Necesario para competir
+    // Usamos la función auxiliar aquí:
+    ConfigurarKart(registry, enemigo2, "DonkeyKong.png");
+    registry.AddComponent<ECS::RaceStats>(enemigo2);
 
     auto& ag2 = registry.AddComponent<ECS::SteeringAgent>(enemigo2);
     ag2.maxSpeed = 110.f;
+    ag1.maxForce = 350.f;
 
     auto& beh2 = registry.AddComponent<ECS::SteeringBehavior>(enemigo2);
     beh2.avoidanceEnabled = true;
